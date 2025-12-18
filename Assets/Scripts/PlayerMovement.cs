@@ -16,17 +16,19 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpForce = 5f;
 
     [SerializeField] private LayerMask groundMask;
-    [HideInInspector] public bool isGrounded;
+    [HideInInspector] public bool allowedToJump;
+    private bool isGrounded;
 
     void Start()
     {
         playerRigidbody.freezeRotation = true;
         currentSpeed = moveSpeed;
+        allowedToJump = true;
     }
 
     void Update()
     {
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown("Jump") && isGrounded && allowedToJump)
         {
             isGrounded = false;
             playerRigidbody.AddForce(UnityEngine.Vector3.up * jumpForce, ForceMode.Impulse);
