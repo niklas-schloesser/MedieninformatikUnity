@@ -1,31 +1,36 @@
 using UnityEngine;
 
-
-
+[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(AudioSource))]
 public class FootstepAudio : MonoBehaviour
 {
     [Header("Footstep Settings")]
-    [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip[] footstepClips;
     [SerializeField] private float stepInterval = 0.5f;
 
     private float stepTimer;
-    private Rigidbody rb;
+    private CharacterController controller;
+    private AudioSource audioSource;
 
     void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-
-        if (audioSource == null)
-            audioSource = GetComponent<AudioSource>();
+        controller = GetComponent<CharacterController>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
     {
-        // horizontal movement speed
-        Vector3 horizontalVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+        if (controller == null || !controller.isGrounded)
+        {
+            stepTimer = 0f;
+            return;
+        }
 
-        if (horizontalVelocity.magnitude > 0.2f && IsGrounded())
+        // Get horizontal speed only
+        Vector3 horizontalVelocity = controller.velocity;
+        horizontalVelocity.y = 0f;
+
+        if (horizontalVelocity.magnitude > 0.2f)
         {
             stepTimer -= Time.deltaTime;
 
@@ -43,15 +48,10 @@ public class FootstepAudio : MonoBehaviour
 
     private void PlayFootstep()
     {
-        if (footstepClips.Length == 0) return;
+        if (footstepClips == null || footstepClips.Length == 0)
+            return;
 
         AudioClip clip = footstepClips[Random.Range(0, footstepClips.Length)];
         audioSource.PlayOneShot(clip);
     }
-
-    private bool IsGrounded()
-    {
-        return Physics.Raycast(transform.position, Vector3.down, 1.1f);
-    }
 }
-
