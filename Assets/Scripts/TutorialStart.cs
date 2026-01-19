@@ -38,8 +38,8 @@ public class TutorialStart : MonoBehaviour
         if (inDialogue)
         {
             player.allowedToJump = false;
+            player.canMove = false;
             cameraScript.canMove = false;
-            playerRigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
         }
 
         if (endDialogue && Input.GetKeyDown(KeyCode.Space))
@@ -68,8 +68,7 @@ public class TutorialStart : MonoBehaviour
         frameAnimator.SetTrigger("disappearTop");
         inDialogue = false;
         player.allowedToJump = true;
+        player.canMove = true;
         cameraScript.canMove = true;
-        playerRigidbody.constraints = RigidbodyConstraints.None;
-        playerRigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
     }
 }

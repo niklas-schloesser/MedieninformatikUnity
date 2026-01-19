@@ -16,13 +16,16 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpForce = 5f;
 
     [SerializeField] private LayerMask groundMask;
+    [HideInInspector] public bool canMove;
     [HideInInspector] public bool allowedToJump;
     private bool isGrounded;
+
 
     void Start()
     {
         playerRigidbody.freezeRotation = true;
         currentSpeed = moveSpeed;
+        canMove = true;
         allowedToJump = true;
     }
 
@@ -46,8 +49,21 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        float hor = Input.GetAxis("Horizontal");
-        float ver = Input.GetAxis("Vertical");
+        //         float hor = Input.GetAxis("Horizontal");
+        // float ver = Input.GetAxis("Vertical");
+        float hor;
+        float ver;
+
+        if (!canMove)
+        {
+            hor = 0;
+            ver = 0;
+        }
+        else
+        {
+            hor = Input.GetAxis("Horizontal");
+            ver = Input.GetAxis("Vertical");
+        }
 
         UnityEngine.Vector3 move = (transform.forward * ver + transform.right * hor) * currentSpeed;
         UnityEngine.Vector3 velocityNew = new UnityEngine.Vector3(move.x, playerRigidbody.linearVelocity.y, move.z);
