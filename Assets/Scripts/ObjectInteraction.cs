@@ -19,8 +19,7 @@ public class ObjectInteraction : MonoBehaviour
     [SerializeField] private GameObject textBox;
     [SerializeField] private TextMeshProUGUI textBoxContent;
 
-
-    [SerializeField] private string message;
+    public string message;
 
     private PlayerMovement playerScript;
     private FirstPersonCamera cameraScript;
@@ -71,6 +70,7 @@ public class ObjectInteraction : MonoBehaviour
         {
             isReadingText = false;
             playerScript.canMove = true;
+            playerScript.allowedToJump = true;
             cameraScript.canMove = true;
             textBox.SetActive(false);
             if (hasItem)
@@ -83,6 +83,7 @@ public class ObjectInteraction : MonoBehaviour
     {
         isReadingText = true;
         playerScript.canMove = false;
+        playerScript.allowedToJump = false;
         cameraScript.canMove = false;
         textBoxContent.text = message;
         textBox.SetActive(true);
