@@ -13,7 +13,8 @@ using TMPro;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    public bool CanMove { get; private set; } = true;
+    public bool CanMove = true;
+
 
     [Header("Movement")]
     [SerializeField] private float walkSpeed = 5f;

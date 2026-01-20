@@ -1,16 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-
-
-
 
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private Transform playerBody;
-    [SerializeField] private float mouseSensitivity = 0.7f;
+    [SerializeField] private float mouseSensitivity = 0.25f; // tune in inspector
+    [SerializeField] private float minPitch = -85f;
+    [SerializeField] private float maxPitch = 85f;
 
     private float xRotation = 0f;
     private bool mouseActivated = false;
@@ -20,7 +16,6 @@ public class CameraController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        // Start with current camera rotation
         xRotation = transform.localEulerAngles.x;
         if (xRotation > 180f) xRotation -= 360f;
     }
@@ -31,20 +26,18 @@ public class CameraController : MonoBehaviour
 
         Vector2 mouseDelta = Mouse.current.delta.ReadValue();
 
-        // DO NOT rotate camera until mouse actually moves
         if (!mouseActivated)
         {
-            if (mouseDelta.sqrMagnitude < 0.01f)
-                return;
-
+            if (mouseDelta.sqrMagnitude < 0.01f) return;
             mouseActivated = true;
         }
 
-        float mouseX = mouseDelta.x * mouseSensitivity * Time.deltaTime;
-        float mouseY = mouseDelta.y * mouseSensitivity * Time.deltaTime;
+        // IMPORTANT: no deltaTime here (mouse delta already per-frame)
+        float mouseX = mouseDelta.x * mouseSensitivity;
+        float mouseY = mouseDelta.y * mouseSensitivity;
 
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -80f, 80f);
+        xRotation = Mathf.Clamp(xRotation, minPitch, maxPitch);
 
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         playerBody.Rotate(Vector3.up * mouseX);
