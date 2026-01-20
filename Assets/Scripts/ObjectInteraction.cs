@@ -14,6 +14,7 @@ public class ObjectInteraction : MonoBehaviour
     [SerializeField] private bool hasItem;
     [SerializeField] private string itemName;
     [SerializeField] private GameObject item;
+    [HideInInspector] public bool finishedText;
 
     [SerializeField] private GameObject interactionIcon;
     [SerializeField] private GameObject textBox;
@@ -68,6 +69,7 @@ public class ObjectInteraction : MonoBehaviour
 
         if (isReadingText && Input.GetKeyDown(KeyCode.Escape))
         {
+            finishedText = true;
             isReadingText = false;
             playerScript.canMove = true;
             playerScript.allowedToJump = true;
@@ -76,6 +78,10 @@ public class ObjectInteraction : MonoBehaviour
             if (hasItem)
             {
                 PickupItem();
+            }
+            else
+            {
+                StartCoroutine(TextFinishDelay());
             }
         }
     }
@@ -95,5 +101,11 @@ public class ObjectInteraction : MonoBehaviour
         interactionIcon.SetActive(false);
         inventoryScript.inventory += "_" + itemName;
         canReadText = false;
+    }
+
+    IEnumerator TextFinishDelay()
+    {
+        yield return new WaitForSeconds(1f);
+        finishedText = false;
     }
 }

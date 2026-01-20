@@ -8,8 +8,9 @@ public class Room1Puzzle : MonoBehaviour
     private Animator boardAnimator;
 
     [SerializeField] private ObjectInteraction boxInteractionScript;
+    [SerializeField] private TextMeshProUGUI objectiveText;
 
-    private bool puzzleSolved;
+    private bool hasKey;
     private bool playedAnimation;
 
     void Start()
@@ -20,16 +21,22 @@ public class Room1Puzzle : MonoBehaviour
 
     void Update()
     {
-        if (inventoryScript.inventory.Contains("_Key") && !puzzleSolved)
+        if (inventoryScript.inventory.Contains("_Key") && !hasKey)
         {
-            puzzleSolved = true;
+            hasKey = true;
             boxInteractionScript.message += "<br><br>Du steckst den Schlüssel ein - die Tafel beginnt sich zu bewegen?!";
         }
 
-        if (puzzleSolved && !playedAnimation && Input.GetKeyDown(KeyCode.Escape))
+        if (hasKey && !playedAnimation && boxInteractionScript.finishedText)
         {
-            playedAnimation = true;
-            boardAnimator.SetTrigger("boardMove");
+            SolvePuzzle();
         }
+    }
+
+    void SolvePuzzle()
+    {
+        playedAnimation = true;
+        boardAnimator.SetBool("boardMove", true);
+        objectiveText.text = "Sammle den Abschluss ein!";
     }
 }
